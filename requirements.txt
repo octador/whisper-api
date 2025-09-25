@@ -1,0 +1,7 @@
+# requirements.txt
+
+faster-whisper
+ctranslate2
+fastapi
+uvicorn
+python-multipart

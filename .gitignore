@@ -1,0 +1,15 @@
+# Environnements virtuels
+venv/
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs et fichiers temporaires
+*.log
+*.tmp
+
+# Docker
+*.env
