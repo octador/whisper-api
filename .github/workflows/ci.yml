@@ -1,11 +1,11 @@
-# whisper-backend/.github/workflows/ci.yml
+# whisper-repo/.github/workflows/ci.yml
 name: CI Whisper - Build & Push Docker Image
 
 on:
   push:
     branches:
-      - main # Déclenche le workflow à chaque push sur la branche 'main'
-      - develop # Ou sur ta branche de développement
+      - main
+      - develop
   pull_request:
     branches:
       - main
@@ -13,35 +13,40 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest # Utilise un runner Ubuntu hébergé par GitHub
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code # Étape 1: Récupère ton code depuis le dépôt GitHub
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python # Étape 2: Configure Python (version 3.10, comme dans ton Dockerfile)
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Install Python dependencies # Étape 3: Installe les dépendances Python
+      - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Run tests # Étape 4: Exécute tes tests (si tu en as).
-        # Si tu n'as pas encore de tests Python, tu peux commenter cette ligne.
-        # Il est recommandé d'ajouter des tests pour ton API FastAPI.
-        # run: pytest
-        run: echo "No Python tests configured yet." # Placeholder si tu n'as pas de tests
+      - name: Run tests
+        run: echo "No Python tests configured yet."
 
-      - name: Log in to Docker Hub # Étape 5: Se connecte à Docker Hub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image # Étape 6: Construit et pousse l'image Docker
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: . # Le contexte de construction est la racine du dépôt
+          context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/whisper-backend:latest # Le tag de ton image
+          tags: ${{ secrets.DOCKER_USERNAME }}/whisper-backend:latest
+
+      - name: Trigger Infra Deployment (Whisper) # <-- NOUVELLE ÉTAPE
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }} # Ton PAT GitHub
+          repository: octador/404language-infra # Le dépôt de ton infra
+          event-type: deploy_whisper # Le type d'événement spécifique à Whisper
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'

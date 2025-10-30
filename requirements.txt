@@ -5,3 +5,5 @@ ctranslate2
 fastapi
 uvicorn
 python-multipart
+requests
+numpy
