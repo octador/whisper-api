@@ -20,7 +20,7 @@ model = None
 
 # --- Constantes pour l'évaluation (définies globalement) ---
 SIMILARITY_THRESHOLD_FACTOR = 0.3 # Max Levenshtein distance comme fraction de la longueur du mot
-LOW_CONFIDENCE_PROBABILITY = 0.7 # Probabilité en dessous de laquelle un mot est considéré comme peu confiant
+LOW_CONFIDENCE_PROBABILITY = 0.4 # Probabilité en dessous de laquelle un mot est considéré comme peu confiant
 # --- Fin des constantes ---
 
 @app.on_event("startup")
